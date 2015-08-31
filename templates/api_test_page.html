@@ -8,10 +8,12 @@
 	app.controller('api_ctrl', function( $scope, $http) {
 		$scope.host = "localhost:8888";
 		$scope.path = "finddevice";
-		$scope.q1 = "";
-		$scope.v1 = "";
+		$scope.query = [{"q":"","v":""},{"q":"","v":""},{"q":"5","v":"6"}];
 		$scope.request_api = function(){
-			url = "http://" + $scope.host + "/" + $scope.path + "?" + $scope.q1 + "=" + $scope.v1;
+			url = "http://" + $scope.host + "/" + $scope.path + "?";
+			for(var q of $scope.query){
+				url = url + q.q + "=" + q.v + "&";	
+			} 
 			console.log( url);
 			$scope.result = url;
 			$http.get( url)
@@ -25,17 +27,26 @@
 </script>
 <body>
 <div ng-app="test_app" ng-controller="api_ctrl">
+<h4>API test</h4>
  	<p>Host <input type="text" ng-model="host"></p>
  	<p>Path <input type="text" ng-model="path"></p>
- 	<p>Query <input type="text" ng-model="q1"></p>
- 	<p>Value <input type="text" ng-model="v1"></p>
+ 	<ul>
+ 		<li ng-repeat="q in query">	
+ 			Query <input type="text" ng-model="q.q">
+ 			Value <input type="text" ng-model="q.v">
+ 		</li>
+ 	</ul>
  	<div>
- 		URL <div>{{host}}/{{path}}?{{q1}}={{v1}}</div>
+ 		URL <div>{{host}}/{{path}}?<span ng-repeat="q in query">{{q.q}}={{q.v}}&</span></div>
  		<button ng-click="request_api()">Test Api</button></br>
  		Result:<div>{{result}}</div></br>
  	</div>
 </div>
 
+<h4>API doc</h4>
+<!--
+<iframe src="https://docs.google.com/document/d/1AdKRufgZDxIfumPvMs62GlXlFfUZP6DTaNDr1t_ZDjQ/edit?usp=sharing" width="100%" height="800p"></iframe>
+-->
 <!-- old school form method  
 <form action="http://localhost:8888/finddevice" method="GET">
 	<input type="submit" value="Test by Form method">
