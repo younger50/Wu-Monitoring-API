@@ -1,32 +1,46 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-<script type="text/javascript">
-	function api_try(){
-		//use ajax to send request to api
-		var xmlhttp = new XMLHttpRequest();
-		var url = document.getElementById('full-url');
-		console.log(url);
-		xmlhttp.onreadystatechange=function() {
-			console.log(xmlhttp.responseText);
-			document.getElementById('result').innerHTNL=xmlhttp.responseText;
+
+<!-- angular js front end module as ai test -->
+<script>
+	var app = angular.module("test_app",[]);
+	app.controller('api_ctrl', function( $scope, $http) {
+		$scope.host = "localhost:8888";
+		$scope.path = "finddevice";
+		$scope.q1 = "";
+		$scope.v1 = "";
+		$scope.request_api = function(){
+			url = "http://" + $scope.host + "/" + $scope.path + "?" + $scope.q1 + "=" + $scope.v1;
+			console.log( url);
+			$scope.result = url;
+			$http.get( url)
+    		.success(function(response) { 
+    			$scope.result = response;
+    			//console.log(response);
+    		});
+			
 		}
-		xmlhttp.open('GET',url,true);
-		xmlhttp.send();
-	}
+	});
 </script>
 <body>
-<!-- Test angular js front end module -->
-<div ng-app="" ng-init="host='localhost:8888'">
+<div ng-app="test_app" ng-controller="api_ctrl">
  	<p>Host <input type="text" ng-model="host"></p>
  	<p>Path <input type="text" ng-model="path"></p>
  	<p>Query <input type="text" ng-model="q1"></p>
  	<p>Value <input type="text" ng-model="v1"></p>
  	<div>
- 		URL <div id="full-url">{{host}}/{{path}}?{{q1}}={{v1}}</div>
- 		<button onclick="api_try()">Try</button>
- 		<div id="result"></div>
+ 		URL <div>{{host}}/{{path}}?{{q1}}={{v1}}</div>
+ 		<button ng-click="request_api()">Test Api</button></br>
+ 		Result:<div>{{result}}</div></br>
  	</div>
 </div>
+
+<!-- old school form method  
+<form action="http://localhost:8888/finddevice" method="GET">
+	<input type="submit" value="Test by Form method">
+</form>
+-->
+
 </body>
 </html>

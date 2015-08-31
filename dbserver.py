@@ -74,6 +74,12 @@ IP = sys.argv[1] if len(sys.argv) >= 2 else '127.0.0.1'
 landId = 100
 node_infos = []
 
+class apiTestPage(tornado.web.RequestHandler):
+    def get(self):
+        # read html as plan test to avoid angular.js variable conflict with pyhton tornado render
+        htmlfile = open('templates/api_test_page.html','r')
+        self.write(htmlfile.read())
+
 class asd(tornado.web.RequestHandler):
     def get(self):
         self.render('templates/asd.html', applications=[])
@@ -122,7 +128,7 @@ class Test_doc:
 #app / com / (att) / loc / wuc 
 # "app_id" : df40477e9a75456ed53400041634f94b
 # "name" : "Light_Sensor"
-# ()
+# ()  
 # "location" : "/WuKong/Door#"
 # "classId" : 1001
 #http://localhost:8888/get?app=df40477e9a75456ed53400041634f94b&com=Light_Sensor&loc=/WuKong/Door%23&wuc=1001
@@ -651,7 +657,7 @@ class Login(tornado.web.RequestHandler):
   #http://localhost:8888/createdevice?id=a&wuobject=b&type=c&capacity=d&network=e&loc=f
 
 application = tornado.web.Application([
-    (r"/", MainHandler),
+    #(r"/", MainHandler),
     (r"/getvalue",GetValue),
     (r"/_createuser",_CreateUser),
     (r"/createuser",CreateUser),
@@ -668,6 +674,7 @@ application = tornado.web.Application([
     (r"/updateapplication",UpdateApplication),
     (r"/deleteapplication",DeleteApplication),
 
+    (r"/", apiTestPage),
     (r"/asd",asd),
     (r"/get",Get )
 ])
