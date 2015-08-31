@@ -1,57 +1,97 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-
+<body>
 <!-- angular js front end module as ai test -->
 <script>
 	var app = angular.module("test_app",[]);
 	app.controller('api_ctrl', function( $scope, $http) {
 		$scope.host = "localhost:8888";
-		$scope.path = "finddevice";
-		$scope.query = [{"q":"","v":""},{"q":"","v":""},{"q":"5","v":"6"}];
+		//keep api schema according and example as opject
+		$scope.api_schema = [
+			{
+				"path":"createuser",
+				"query":[
+					{"q":"id","v":"wukong"},
+					{"q":"pwd","v":"wukong2014"},
+					{"q":"type","v":"adult"},
+					{"q":"pref","v":"Null"},
+					{"q":"loc","v":"BL-7F/Workspace/Entrance"}
+				],
+				"help":"Create a user information which involve the WuKong system. This created user have authority to build and store & access system data which is belong to this user."
+				//http://localhost:8888/createuser?id=wukong&pwd=wukong2014&type=adult&pref=Null&loc=BL-7F/Workspace/Entrance
+			},
+			{
+				"path":"finddevice",
+				"query":[],
+				"help":"Find all devices belong user’s r/w authority."
+			},
+			{
+				"path":"get",
+				"query":[
+					{"q":"app","v":"df40477e9a75456ed53400041634f94b"},
+					{"q":"com","v":"Light_Sensor"},
+					{"q":"loc","v":"/WuKong/Door%23"},
+					{"q":"wuc","v":"1001"},
+					{"q":"tss","v":"201501011111"}
+				],
+				"help":"Access Sensing data information via this action, we support multi-parameter at query."
+				//sample: "http://localhost:8888/get?app=df40477e9a75456ed53400041634f94b&com=Light_Sensor&loc=/WuKong/Door%23&wuc=1001&tss=201501011111"
+			}
+		];
+		$scope.path = "";
+		$scope.query = [];
+		$scope.query_display = function (api) {
+			//upate query string ui
+			console.log(api);
+			$scope.path = api.path;
+			$scope.query = api.query;
+		}
 		$scope.request_api = function(){
+			//rebuild url form ui input 
 			url = "http://" + $scope.host + "/" + $scope.path + "?";
 			for(var q of $scope.query){
 				url = url + q.q + "=" + q.v + "&";	
 			} 
 			console.log( url);
-			$scope.result = url;
+			//execute api query
 			$http.get( url)
     		.success(function(response) { 
     			$scope.result = response;
-    			//console.log(response);
+    			console.log(response);
     		});
 			
 		}
 	});
 </script>
-<body>
 <div ng-app="test_app" ng-controller="api_ctrl">
-<h4>API test</h4>
- 	<p>Host <input type="text" ng-model="host"></p>
- 	<p>Path <input type="text" ng-model="path"></p>
+	<h3>API test</h3>
+ 	<h4>Host</h4><input type="text" ng-model="host">
+ 	<h4>API list</h4>
+ 	<ul>
+ 		<li ng-repeat="api in api_schema">
+ 			<button ng-click="query_display(api)">{{api.path}}</button></br>
+ 			<p>{{api.help}}</p>
+ 		</li>
+ 	</ul>
+ 	<h4>API value</h4>
+ 	Path <input type="text" ng-model="path">
  	<ul>
  		<li ng-repeat="q in query">	
- 			Query <input type="text" ng-model="q.q">
+ 			Key <input type="text" ng-model="q.q">
  			Value <input type="text" ng-model="q.v">
  		</li>
  	</ul>
+ 	<h4>APU access test</h4>
  	<div>
- 		URL <div>{{host}}/{{path}}?<span ng-repeat="q in query">{{q.q}}={{q.v}}&</span></div>
- 		<button ng-click="request_api()">Test Api</button></br>
- 		Result:<div>{{result}}</div></br>
+ 		URL: <div>{{host}}/{{path}}?<span ng-repeat="q in query">{{q.q}}={{q.v}}&</span></div></br>
+ 		Access: <div><button ng-click="request_api()">Test Api</button></div></br>
+ 		Result: <div>{{result}}</div></br>
  	</div>
 </div>
-
-<h4>API doc</h4>
 <!--
+<h4>API doc</h4>
 <iframe src="https://docs.google.com/document/d/1AdKRufgZDxIfumPvMs62GlXlFfUZP6DTaNDr1t_ZDjQ/edit?usp=sharing" width="100%" height="800p"></iframe>
 -->
-<!-- old school form method  
-<form action="http://localhost:8888/finddevice" method="GET">
-	<input type="submit" value="Test by Form method">
-</form>
--->
-
 </body>
 </html>
