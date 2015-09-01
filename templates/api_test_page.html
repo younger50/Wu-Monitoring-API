@@ -6,10 +6,10 @@
 <script>
 	var app = angular.module("test_app",[]);
 	app.controller('api_ctrl', function( $scope, $http) {
-		$scope.host = "localhost:8888";
 		//keep api schema according and example as opject
 		$scope.api_schema = [
 			{
+				"title":"CreateUser",
 				"path":"createuser",
 				"query":[
 					{"q":"id","v":"wukong"},
@@ -22,11 +22,7 @@
 				//http://localhost:8888/createuser?id=wukong&pwd=wukong2014&type=adult&pref=Null&loc=BL-7F/Workspace/Entrance
 			},
 			{
-				"path":"finddevice",
-				"query":[],
-				"help":"Find all devices belong user’s r/w authority."
-			},
-			{
+				"title":"GetValue",
 				"path":"get",
 				"query":[
 					{"q":"app","v":"df40477e9a75456ed53400041634f94b"},
@@ -37,18 +33,65 @@
 				],
 				"help":"Access Sensing data information via this action, we support multi-parameter at query."
 				//sample: "http://localhost:8888/get?app=df40477e9a75456ed53400041634f94b&com=Light_Sensor&loc=/WuKong/Door%23&wuc=1001&tss=201501011111"
+			},
+			{
+				"title":"CreateSystem",
+				"path":"createsystem",
+				"query":[
+					{"q":"id","v":"sys1"},
+					{"q":"holder","v":"wukong"},
+					{"q":"devices","v":"[d1,d2]"},
+					{"q":"fbps","v":"[f1,f2]"},
+					{"q":"gateways","v":"[g1,g2]"},
+					{"q":"wuclasses","v":"[wc1,wc2]"}
+				],
+				"help":"Create a whole system’s information and store it at DB."
+				//sample: "http://localhost:8888/createsystem?id=sys1&holder=wukong&devices=[d1,d2]&fbps=[f1,f2]&gateways=[g1,g2]&wuclasses=[wc1,wc2]"
+			},
+			
+			{
+				"title":"CreateDevice",
+				"path":"createdevice",
+				"query":[
+					{"q":"id","v":"d1"},
+					{"q":"wuobject","v":"wc1"},
+					{"q":"type","v":"light_sensor"},
+					{"q":"capacity","v":"c1"},
+					{"q":"network","v":"n1"},
+					{"q":"loc","v":"BL-7F/WorkSpace/Entrance"}
+				],
+				"help":"Create device and its’ detail information."
+				//sample: "http://localhost:8888/createdevice?id=d1&wuobject=wc1&type=light_sensor&capacity=c1&network=n1&loc=BL-7F/WorkSpace/Entrance"
+			},
+			{
+				"title":"FindDevice",
+				"path":"finddevice",
+				"query":[],
+				"help":"Find all devices belong user’s r/w authority."
+			},
+			{
+				"title":"DeleteDevice",
+				"path":"deletedevice",
+				"query":[
+					{"q":"Did","v":"55489b39491d430e430e79aa"}
+				],
+				"help":"Create device and its’ detail information."
+				//sample: "http://localhost:8888/deletedevice?Did=55489b39491d430e430e79aa"
 			}
 		];
+		//default query
+		$scope.host = "localhost:8888";
+		$scope.title = "";
 		$scope.path = "";
 		$scope.query = [];
 		$scope.query_display = function (api) {
 			//upate query string ui
-			console.log(api);
+			$scope.title = api.title;
 			$scope.path = api.path;
 			$scope.query = api.query;
 		}
 		$scope.request_api = function(){
-			//rebuild url form ui input 
+			//rebuild url form query ui input 
 			url = "http://" + $scope.host + "/" + $scope.path + "?";
 			for(var q of $scope.query){
 				url = url + q.q + "=" + q.v + "&";	
@@ -58,6 +101,7 @@
 			$http.get( url)
     		.success(function(response) { 
     			$scope.result = response;
+    			$scope.result_title = $scope.title;
     			console.log(response);
     		});
 			
@@ -65,28 +109,28 @@
 	});
 </script>
 <div ng-app="test_app" ng-controller="api_ctrl">
-	<h3>API test</h3>
- 	<h4>Host</h4><input type="text" ng-model="host">
+	<h3>Monitoring API test</h3>
  	<h4>API list</h4>
  	<ul>
  		<li ng-repeat="api in api_schema">
- 			<button ng-click="query_display(api)">{{api.path}}</button></br>
+ 			<button ng-click="query_display(api)">{{api.title}}</button>
  			<p>{{api.help}}</p>
  		</li>
  	</ul>
- 	<h4>API value</h4>
- 	Path <input type="text" ng-model="path">
+ 	<h4>API {{title}}</h4>
+ 	Host: <input type="text" ng-model="host"></br>
+ 	Path: <input type="text" ng-model="path"></br>
  	<ul>
  		<li ng-repeat="q in query">	
  			Key <input type="text" ng-model="q.q">
  			Value <input type="text" ng-model="q.v">
  		</li>
  	</ul>
- 	<h4>APU access test</h4>
+ 	<h4>API access test</h4>
  	<div>
  		URL: <div>{{host}}/{{path}}?<span ng-repeat="q in query">{{q.q}}={{q.v}}&</span></div></br>
- 		Access: <div><button ng-click="request_api()">Test Api</button></div></br>
- 		Result: <div>{{result}}</div></br>
+ 		Access: <div><button ng-click="request_api()">Test API Now!</button></div></br>
+ 		Result {{result_title}}: <div>{{result}}</div></br>
  	</div>
 </div>
 <!--
