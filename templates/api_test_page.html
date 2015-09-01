@@ -48,7 +48,6 @@
 				"help":"Create a whole system’s information and store it at DB."
 				//sample: "http://localhost:8888/createsystem?id=sys1&holder=wukong&devices=[d1,d2]&fbps=[f1,f2]&gateways=[g1,g2]&wuclasses=[wc1,wc2]"
 			},
-			
 			{
 				"title":"CreateDevice",
 				"path":"createdevice",
@@ -77,9 +76,23 @@
 				],
 				"help":"Create device and its’ detail information."
 				//sample: "http://localhost:8888/deletedevice?Did=55489b39491d430e430e79aa"
+			},
+			{
+				"title":"UpdateDevice",
+				"path":"createdevice",
+				"query":[
+					{"q":"id","v":"d1"},
+					{"q":"wuobject","v":"wc1"},
+					{"q":"type","v":"light_sensor"},
+					{"q":"capacity","v":"c1"},
+					{"q":"network","v":"n1"},
+					{"q":"loc","v":"BL-7F/WorkSpace/Entrance"}
+				],
+				"help":"Create device and its’ detail information."
+				//sample: "http://localhost:8888/createdevice?id=d1&wuobject=wc1&type=light_sensor&capacity=c1&network=n1&loc=BL-7F/WorkSpace/Entrance"
 			}
 		];
-		//default query
+		//default query status
 		$scope.host = "localhost:8888";
 		$scope.title = "";
 		$scope.path = "";
