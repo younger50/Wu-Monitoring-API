@@ -20,6 +20,7 @@ UpdateDevice
 ```
 #### Mentioned but not yet implemented
 ```
+Login
 CreateApplication
 addWuClassInDevice 
 addDeviceInSystem 
