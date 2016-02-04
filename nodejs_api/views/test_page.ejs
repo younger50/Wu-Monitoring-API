@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<body>
+<!-- angular js front end module as ai test -->
+<script>
+	var app = angular.module("test_app",[]);
+	app.controller('api_ctrl', function( $scope, $http) {
+		//keep api schema according and example as opject
+		$scope.api_schema = [
+			{
+				"title":"CreateDevice",
+				"path":"create_device",
+				"type":"POST",
+				"query":[
+					{"q":"apikey","v":"0123457"}
+				],
+				"body":{
+					"WuID":"5566",
+  					"Name":"lightsensor",
+					"Location":"bedroom"
+				},
+				"help":"Create device and its’ detail information."
+				//sample: "http://localhost:8888/createdevice?id=d1&wuobject=wc1&type=light_sensor&capacity=c1&network=n1&loc=BL-7F/WorkSpace/Entrance"
+			},
+			{
+				"title":"GetAllDevice",
+				"path":"get_all_device",
+				"type":"GET",
+				"query":[
+					{"q":"apikey","v":"0123457"}
+				],
+				"help":"Find all devices belong user’s r/w authority."
+			}
+		];
+		//default query status
+		$scope.host = "localhost:3000/demo";
+		$scope.title = "";
+		$scope.path = "";
+		$scope.query = [];
+		$scope.query_display = function (api) {
+			//upate query string ui
+			$scope.title = api.title;
+			$scope.path = api.path;
+			$scope.query = api.query;
+			//key a object copy of selected one
+			$scope.type = api.type;
+			$scope.body = api.body;
+		}
+		$scope.request_api = function(){
+			//rebuild url form query ui input 
+			url = "http://" + $scope.host + "/" + $scope.path + "?";
+			for(var q of $scope.query){
+				url = url + q.q + "=" + q.v + "&";	
+			} 
+			console.log( url);
+			//execute api query
+			if( $scope.type == "GET" ){
+				$http.get( url)
+	    		.success(function(response) { 
+	    			$scope.result = response;
+	    			$scope.result_title = $scope.title;
+	    			console.log(response);
+	    		});
+    		}
+			else if( $scope.type == "POST" ){
+				$http.post( url, $scope.body)
+	    		.success(function(response) { 
+	    			$scope.result = response;
+	    			$scope.result_title = $scope.title;
+	    			console.log(response);
+	    		});
+    		}
+		}
+	});
+</script>
+<div ng-app="test_app" ng-controller="api_ctrl">
+	<h3>Monitoring API test</h3>
+ 	<h4>API list</h4>
+ 	<ul>
+ 		<li ng-repeat="api in api_schema">
+ 			<button ng-click="query_display(api)">{{api.title}}</button>
+ 			<p>{{api.help}}</p>
+ 		</li>
+ 	</ul>
+ 	<h4>API {{title}}</h4>
+ 	<div>
+	 	Host: <input type="text" ng-model="host"></br>
+	 	Path: <input type="text" ng-model="path"></br>
+ 	</div>
+ 	<div>
+	 	Query String:
+	 	<ul>
+	 		<li ng-repeat="q in query">	
+	 			Key <input type="text" ng-model="q.q">
+	 			Value <input type="text" ng-model="q.v">
+	 		</li>
+	 	</ul>
+ 	</div>
+	<div ng-if="type == 'POST'">
+		POST Body:
+		<ul>
+			<li ng-repeat="(key,Valueue) in body">
+				{{key}} : <input type="text" ng-model="body[key]">
+			</li>
+		</ul>
+		Static debug:
+		<ul>
+			<li ng-repeat="data in body">
+				{{data}}
+			</li>
+		</ul>
+	</div>
+ 	<h4>API access test</h4>
+ 	<div>
+ 		URL: <div>{{host}}/{{path}}?<span ng-repeat="q in query">{{q.q}}={{q.v}}&</span></div></br>
+ 		Access: <div><button ng-click="request_api()">Test API Now!</button></div></br>
+ 		Result {{result_title}}: <div>{{result}}</div></br>
+ 	</div>
+</div>
+<!--
+<h4>API doc</h4>
+<iframe src="https://docs.google.com/document/d/1AdKRufgZDxIfumPvMs62GlXlFfUZP6DTaNDr1t_ZDjQ/edit?usp=sharing" width="100%" height="800p"></iframe>
+-->
+</body>
+</html>
