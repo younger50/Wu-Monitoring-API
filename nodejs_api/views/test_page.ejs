@@ -20,7 +20,7 @@
   					"Name":"lightsensor",
 					"Location":"bedroom"
 				},
-				"help":"Create device with detail information."
+				"help":"Create a new wukong device in the system."
 			},
 			{
 				"title":"DeleteDevice",
@@ -30,11 +30,9 @@
 					{"q":"apikey","v":"0123457"}
 				],
 				"body":{
-					"WuID":"5566",
-  					"Name":"lightsensor",
-					"Location":"bedroom"
+					"WuID":"5566"
 				},
-				"help":"Create device with detail information."
+				"help":"Delete specific wukong device in the system."
 			},
 			{
 				"title":"GetAllDevice",
@@ -43,7 +41,31 @@
 				"query":[
 					{"q":"apikey","v":"0123457"}
 				],
-				"help":"Find all devices."
+				"help":"List all devices in the system."
+			},
+			{
+				"title":"SendData",
+				"path":"send_data",
+				"type":"POST",
+				"query":[
+					{"q":"apikey","v":"0123457"}
+				],
+				"body":{
+					"WuID":"5566",
+  					"Time":"2016/1/1 11:11",
+					"Data":"1"
+				},
+				"help":"Send data from device to server."
+			},
+			{
+				"title":"GetData",
+				"path":"get_data",
+				"type":"GET",
+				"query":[
+					{"q":"apikey","v":"0123457"},
+					{"q":"WuID","v":"5566"}
+				],
+				"help":"Get collected data of a specific device."
 			}
 		];
 		//default query status
@@ -117,12 +139,12 @@
 				{{key}} : <input type="text" ng-model="body[key]">
 			</li>
 		</ul>
-		Static debug:
+		<!--Static debug:
 		<ul>
 			<li ng-repeat="data in body">
 				{{data}}
 			</li>
-		</ul>
+		</ul>-->
 	</div>
  	<h4>API access test</h4>
  	<div>

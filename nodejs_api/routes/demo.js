@@ -7,11 +7,11 @@ var mongodb_url = 'mongodb://localhost:27017/demo';
 
 /* home made mongo db functions */
 //
-var dbfind = function ( target, callback) {
+var dbfind = function ( collection, target, callback) {
 	MongoClient.connect( mongodb_url, function (err, db) {
 		assert.equal(err, null);
 		console.log("Connected correctly to server.");
-		cursor = db.collection('device').find(target);
+		cursor = db.collection(collection).find(target);
 		var list = [];
 		cursor.each( function (err, doc) {
 		    assert.equal(err, null);
@@ -27,11 +27,11 @@ var dbfind = function ( target, callback) {
 	});
 }
 
-var dbinsert = function ( target, callback) {
+var dbinsert = function ( collection, target, callback) {
 	MongoClient.connect( mongodb_url, function (err, db) {
 		assert.equal(err, null);
 		console.log("Connected correctly to server.");
-		cursor = db.collection('device').insertOne( target,
+		db.collection(collection).insertOne( target,
 		function (err, result) {
 		    assert.equal(err, null);
 		    console.log("db insert success");
@@ -41,11 +41,11 @@ var dbinsert = function ( target, callback) {
 	});
 }
 
-var dbdelete = function ( target, callback) {
+var dbdelete = function ( collection, target, callback) {
 	MongoClient.connect( mongodb_url, function (err, db) {
 		assert.equal(err, null);
 		console.log("Connected correctly to server.");
-		cursor = db.collection('device').deleteMany( target,
+		db.collection(collection).deleteMany( target,
 		function (err, result) {
 		    assert.equal(err, null);
 		    console.log("db delete success");
@@ -57,7 +57,6 @@ var dbdelete = function ( target, callback) {
 
 /* demo home test page */
 router.get('/', function (req, res, next) {
-  //res.send('demo home');
   res.render('test_page');
 });
 
@@ -66,7 +65,7 @@ router.get('/', function (req, res, next) {
 /* POST CreateDevice */
 router.post('/create_device', function (req, res, next) {
 	console.log(req.body);
-	dbinsert( req.body, function (data) {
+	dbinsert( 'device', req.body, function (data) {
 		res.send("STATUS "+JSON.stringify(req.body));
 	});
 });
@@ -74,21 +73,40 @@ router.post('/create_device', function (req, res, next) {
 /* !!TESTING ONLY!! POST DeleteDevice */
 router.post('/delete_device', function (req, res, next) {
 	console.log(req.body);
-	dbdelete( req.body, function (data) {
+	// delete data log
+	dbdelete( 'data', {"WuID":req.body.WuID}, function (data) {
+		//res.send("STATUS "+JSON.stringify(req.body));
+		console.log(data);
+	});
+	// delete device info
+	dbdelete( 'device', req.body, function (data) {
 		res.send("STATUS "+JSON.stringify(req.body));
 	});
 });
 
 /* GET GetAllDevice */
 router.get('/get_all_device', function (req, res, next) {
-	dbfind( {}, function (data) {
+	dbfind( 'device', {}, function (data) {
 		res.setHeader('Content-Type', 'application/json');
 		res.send(data);
 	});
 });
 
 /* POST SendData */
+router.post('/send_data', function (req, res, next) {
+	console.log(req.body);
+	dbinsert( 'data', req.body, function (data) {
+		res.send("STATUS "+JSON.stringify(req.body));
+	});
+});
 
 /* GET GetDeviceData */
+router.get('/get_data', function (req, res, next) {
+	console.log(req.query);
+	dbfind( 'data', {"WuID":req.query.WuID}, function (data) {
+		res.setHeader('Content-Type', 'application/json');
+		res.send(data);
+	});
+});
 
 module.exports = router;
