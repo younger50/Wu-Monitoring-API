@@ -41,7 +41,21 @@ var dbinsert = function ( target, callback) {
 	});
 }
 
-/* demo home */
+var dbdelete = function ( target, callback) {
+	MongoClient.connect( mongodb_url, function (err, db) {
+		assert.equal(err, null);
+		console.log("Connected correctly to server.");
+		cursor = db.collection('device').deleteMany( target,
+		function (err, result) {
+		    assert.equal(err, null);
+		    console.log("db delete success");
+		    callback(result);
+		    db.close();
+	   	});
+	});
+}
+
+/* demo home test page */
 router.get('/', function (req, res, next) {
   //res.send('demo home');
   res.render('test_page');
@@ -53,7 +67,15 @@ router.get('/', function (req, res, next) {
 router.post('/create_device', function (req, res, next) {
 	console.log(req.body);
 	dbinsert( req.body, function (data) {
-		res.send("OK "+JSON.stringify(req.body));
+		res.send("STATUS "+JSON.stringify(req.body));
+	});
+});
+
+/* !!TESTING ONLY!! POST DeleteDevice */
+router.post('/delete_device', function (req, res, next) {
+	console.log(req.body);
+	dbdelete( req.body, function (data) {
+		res.send("STATUS "+JSON.stringify(req.body));
 	});
 });
 

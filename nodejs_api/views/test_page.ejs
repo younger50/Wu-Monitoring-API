@@ -20,8 +20,21 @@
   					"Name":"lightsensor",
 					"Location":"bedroom"
 				},
-				"help":"Create device and its’ detail information."
-				//sample: "http://localhost:8888/createdevice?id=d1&wuobject=wc1&type=light_sensor&capacity=c1&network=n1&loc=BL-7F/WorkSpace/Entrance"
+				"help":"Create device with detail information."
+			},
+			{
+				"title":"DeleteDevice",
+				"path":"delete_device",
+				"type":"POST",
+				"query":[
+					{"q":"apikey","v":"0123457"}
+				],
+				"body":{
+					"WuID":"5566",
+  					"Name":"lightsensor",
+					"Location":"bedroom"
+				},
+				"help":"Create device with detail information."
 			},
 			{
 				"title":"GetAllDevice",
@@ -30,7 +43,7 @@
 				"query":[
 					{"q":"apikey","v":"0123457"}
 				],
-				"help":"Find all devices belong user’s r/w authority."
+				"help":"Find all devices."
 			}
 		];
 		//default query status
