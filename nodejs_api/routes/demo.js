@@ -3,7 +3,7 @@ var router = express.Router();
 
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var mongodb_url = 'mongodb://localhost:27017/demo';
+var mongodb_url = 'mongodb://140.112.170.32:27017/demo';
 
 /* home made mongo db functions */
 //

@@ -139,18 +139,14 @@
 				{{key}} : <input type="text" ng-model="body[key]">
 			</li>
 		</ul>
-		<!--Static debug:
-		<ul>
-			<li ng-repeat="data in body">
-				{{data}}
-			</li>
-		</ul>-->
 	</div>
  	<h4>API access test</h4>
  	<div>
  		URL: <div>{{host}}/{{path}}?<span ng-repeat="q in query">{{q.q}}={{q.v}}&</span></div></br>
- 		Access: <div><button ng-click="request_api()">Test API Now!</button></div></br>
- 		Result {{result_title}}: <div>{{result}}</div></br>
+ 		Access: <div><button ng-click="request_api()">Test API</button></div></br>
+ 		Result: </br>
+		{{result_title}} </br>
+ 		<div>{{result}}</div></br>
  	</div>
 </div>
 </body>
