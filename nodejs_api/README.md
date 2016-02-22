@@ -23,26 +23,4 @@ Open browser and connect to http://localhost:3000/demo
 
 
 ### Planned function
-
-#### Implemented in Python version
-```
-CreateUser
-GetValue
-CreateSystem
-CreateDevice
-FindDevice
-DeleteDevice
-UpdateDevice
-```
-#### Mentioned but not yet implemented
-```
-Login
-CreateApplication
-addWuClassInDevice 
-addDeviceInSystem 
-createMappingForApplication
-addSensorData 
-findDataForApplication
-findDataInLocation
-findDataForUser 
-```
+Please refer to project wiki page
