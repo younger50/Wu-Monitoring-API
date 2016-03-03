@@ -52,7 +52,7 @@
 				],
 				"body":{
 					"WuID":"5566",
-  					"Time":"2016/1/1 11:11",
+  					"Time":new Date().toUTCString(),
 					"Data":"1"
 				},
 				"help":"Send data from device to server."
@@ -66,6 +66,18 @@
 					{"q":"WuID","v":"5566"}
 				],
 				"help":"Get collected data of a specific device."
+			},
+			{
+				"title":"GetDataByTime",
+				"path":"get_data_by_time",
+				"type":"GET",
+				"query":[
+					{"q":"apikey","v":"0123457"},
+					{"q":"WuID","v":"5566"},
+					{"q":"TStart","v":new Date().toUTCString()},
+					{"q":"TEnd","v":new Date().toUTCString()}
+				],
+				"help":"Get collected data of a specific device within time range."
 			}
 		];
 		//default query status

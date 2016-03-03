@@ -66,7 +66,7 @@ router.get('/', function (req, res, next) {
 router.post('/create_device', function (req, res, next) {
 	console.log(req.body);
 	dbinsert( 'device', req.body, function (data) {
-		res.send("STATUS "+JSON.stringify(req.body));
+		res.send("STATUS "+JSON.stringify(data));
 	});
 });
 
@@ -80,7 +80,7 @@ router.post('/delete_device', function (req, res, next) {
 	});
 	// delete device info
 	dbdelete( 'device', req.body, function (data) {
-		res.send("STATUS "+JSON.stringify(req.body));
+		res.send("STATUS "+JSON.stringify(data));
 	});
 });
 
@@ -95,8 +95,14 @@ router.get('/get_all_device', function (req, res, next) {
 /* POST SendData */
 router.post('/send_data', function (req, res, next) {
 	console.log(req.body);
-	dbinsert( 'data', req.body, function (data) {
-		res.send("STATUS "+JSON.stringify(req.body));
+	dbinsert( 'data', 
+		{
+			"WuID":req.body.WuID,
+			"Time":new Date(new Date(req.body.Time).toUTCString()),
+			//.toISOString()
+			"Data":req.body.Data
+		}, function (data) {
+		res.send("STATUS "+JSON.stringify(data));
 	});
 });
 
@@ -108,6 +114,24 @@ router.get('/get_data', function (req, res, next) {
 		res.send(data);
 	});
 });
+
+/* GET GetDeviceData */
+router.get('/get_data_by_time', function (req, res, next) {
+	console.log(req.query);
+	dbfind( 'data', 
+		{
+			"WuID":req.query.WuID,
+			"Time":
+			{
+				$gte:new Date(new Date(req.query.TStart).toUTCString()),
+				$lte:new Date(new Date(req.query.TEnd).toUTCString())
+			}
+		}, function (data) {
+		res.setHeader('Content-Type', 'application/json');
+		res.send(data);
+	});
+});
+
 
 module.exports = router;
 	
