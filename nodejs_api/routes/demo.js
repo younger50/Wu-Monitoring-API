@@ -1,9 +1,25 @@
 var express = require('express');
 var router = express.Router();
 
+var oauthserver = require('oauth2-server');
+
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var mongodb_url = 'mongodb://140.112.170.32:27017/demo';
+
+//oauth setup
+router.oauth = new oauthserver({ model: {}, grants:['password'], debug: true }); 
+
+//oauth test
+router.all('/oauth/token', router.oauth.grant());
+
+router.get('/oauth/login', function (req, res, next) {
+  res.render('login_page');
+});
+
+router.get('/oauth', router.oauth.authorise(), function (req, res) {
+  res.send('Secret area');
+});
 
 /* home made mongo db functions */
 //
